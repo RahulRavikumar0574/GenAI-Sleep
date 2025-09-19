@@ -56,13 +56,14 @@ export default function Dashboard() {
   }, [profile]);
 
   // Simple recommendation: score by overlapping skills + interests with career requirements/categories
+  type CareerWithScore = typeof CAREER_PATHS[0] & { _score: number };
   const recommendations = useMemo(() => {
-    const scored = CAREER_PATHS.map((c: any) => {
+    const scored: CareerWithScore[] = CAREER_PATHS.map((c) => {
       const skillOverlap = (c.requiredSkills || []).filter((s: string) => profile.skills.map(x => x.toLowerCase()).includes(s.toLowerCase())).length;
       const interestHit = profile.interests.some((i) => (c.category && i.toLowerCase().includes(c.category.toLowerCase())));
       const score = skillOverlap * 2 + (interestHit ? 1 : 0);
       return { ...c, _score: score };
-    }).sort((a: any, b: any) => b._score - a._score);
+    }).sort((a, b) => b._score - a._score);
     return scored.slice(0, 3);
   }, [profile]);
 

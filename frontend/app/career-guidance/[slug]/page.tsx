@@ -15,16 +15,16 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
   if (!career) return notFound();
 
   // Use available fields and provide fallback/mock data for missing ones
-  const stats = [
-    { label: 'Avg. Salary', value: '₹8L' },
+  const stats: { label: string; value: string }[] = [
+    { label: 'Avg. Salary', value: '\u20b98L' },
     { label: 'Job Growth', value: '7%' },
     { label: 'Work/Life', value: 'Balanced' },
   ];
-  const timeline = (career.timeline ?? []) as { time: string; activity: string; color: string }[];
-  const dos = career.dos || ['Be curious', 'Ask questions'];
-  const donts = career.donts || ["Don't be afraid to fail"];
+  const timeline: { time: string; activity: string; color: string }[] = (career.timeline ?? []);
+  const dos: string[] = career.dos || ['Be curious', 'Ask questions'];
+  const donts: string[] = career.donts || ["Don&apos;t be afraid to fail"];
   // Related careers mock
-  const related = [
+  const related: { slug: string; title: string; image: string }[] = [
     { slug: 'judge', title: 'Judge', image: '/images/judge.jpg' },
     { slug: 'legal-advisor', title: 'Legal Advisor', image: '/images/legal-advisor.jpg' },
   ];
