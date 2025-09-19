@@ -40,14 +40,14 @@ export default function CareerGuidance() {
     });
   };
 
-  const categories = React.useMemo(() => ['All', ...Array.from(new Set(CAREER_PATHS.map((c: any) => c.category).filter(Boolean)))], []);
-  const allGrowth = React.useMemo(() => Array.from(new Set(CAREER_PATHS.flatMap((c: any) => c.outlook?.futureTrends || []))), []);
+  const categories = React.useMemo(() => ['All', ...Array.from(new Set(CAREER_PATHS.map(c => c.category).filter(Boolean)))], []);
+  const allGrowth = React.useMemo(() => Array.from(new Set(CAREER_PATHS.flatMap(c => c.outlook?.futureTrends || []))), []);
 
   const filtered = React.useMemo(() => {
-    let list = CAREER_PATHS.filter((c: any) =>
+    let list = CAREER_PATHS.filter(c =>
       (!q || c.title.toLowerCase().includes(q.toLowerCase()) || (c.desc || '').toLowerCase().includes(q.toLowerCase())) &&
       (category === 'All' || c.category === category)
-    ).map((c: any) => {
+    ).map(c => {
       const req: string[] = c.requiredSkills || [];
       const have = (profile.skills || []).map(s => s.toLowerCase());
       const match = req.length ? Math.round(req.filter(s => have.includes(s.toLowerCase())).length / req.length * 100) : 0;
@@ -55,25 +55,25 @@ export default function CareerGuidance() {
     });
     // Sidebar filters
     if (demandFilter.length) {
-      list = list.filter((c: any) => demandFilter.includes(c.outlook?.demand));
+      list = list.filter(c => demandFilter.includes(c.outlook?.demand));
     }
     if (salaryRange) {
       const [minL, maxL] = salaryRange;
-      list = list.filter((c: any) => {
+      list = list.filter(c => {
         const mid = (c.salaries?.mid || 0) / 100000; // convert to LPA
         return mid >= minL && mid <= maxL;
       });
     }
     if (growthTags.length) {
-      list = list.filter((c: any) => (c.outlook?.futureTrends || []).some((t: string) => growthTags.includes(t)));
+      list = list.filter(c => (c.outlook?.futureTrends || []).some((t: string) => growthTags.includes(t)));
     }
     if (sort === 'salary') {
-      list.sort((a: any, b: any) => (b.salaries?.mid || 0) - (a.salaries?.mid || 0));
+      list.sort((a, b) => (b.salaries?.mid || 0) - (a.salaries?.mid || 0));
     } else if (sort === 'demand') {
-      const rank: any = { High: 3, Medium: 2, Low: 1 };
-      list.sort((a: any, b: any) => (rank[b.outlook?.demand] || 0) - (rank[a.outlook?.demand] || 0));
+      const rank: Record<string, number> = { High: 3, Medium: 2, Low: 1 };
+      list.sort((a, b) => (rank[b.outlook?.demand] || 0) - (rank[a.outlook?.demand] || 0));
     } else {
-      list.sort((a: any, b: any) => (b._match || 0) - (a._match || 0));
+      list.sort((a, b) => (b._match || 0) - (a._match || 0));
     }
     return list;
   }, [q, category, sort, profile.skills, demandFilter, salaryRange, growthTags]);
@@ -149,14 +149,14 @@ export default function CareerGuidance() {
           {/* Recommendation ribbon */}
           <Typography variant="subtitle1" fontWeight={700} mb={1}>Top matches for you</Typography>
           <Stack direction="row" spacing={1} flexWrap="wrap" mb={2}>
-            {filtered.slice(0, 5).map((c: any) => (
+            {filtered.slice(0, 5).map(c => (
               <Chip key={c.slug || c.title} label={`${c.title}`} variant="outlined" />
             ))}
           </Stack>
 
           {/* Cards grid */}
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
-            {filtered.slice(0, visible).map((c: any) => (
+            {filtered.slice(0, visible).map(c => (
               <Card key={c.slug} variant="outlined" sx={{ position: 'relative' }}>
                 <IconButton onClick={() => toggleFav(c.slug)} sx={{ position: 'absolute', top: 8, right: 8 }} aria-label="favorite">
                   {favorites.includes(c.slug) ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />}
@@ -234,7 +234,7 @@ export default function CareerGuidance() {
             {compare.length > 0 && (
               <Box>
                 {compare.map((slug) => {
-                  const c: any = CAREER_PATHS.find((x: any) => x.slug === slug);
+                  const c = CAREER_PATHS.find(career => career.slug === slug);
                   if (!c) return null;
                   const mid = Math.round((c.salaries?.mid || 0) / 100000);
                   return (
@@ -244,11 +244,11 @@ export default function CareerGuidance() {
                         <Stack direction="row" spacing={1} flexWrap="wrap" mb={1} mt={0.5}>
                           <Chip size="small" label={c.category || 'General'} />
                           {c.outlook?.demand && <Chip size="small" color="secondary" label={c.outlook.demand} />}
-                          <Chip size="small" label={`Mid ₹${mid}L`} />
+                          <Chip size="small" label={`Mid 9${mid}L`} />
                         </Stack>
                         <Typography variant="caption" color="text.secondary">Top skills</Typography>
                         <Stack direction="row" spacing={1} flexWrap="wrap">
-                          {(c.requiredSkills || []).slice(0,5).map((s: string) => <Chip key={s} label={s} size="small" />)}
+                          {(c.requiredSkills || []).slice(0,5).map((s: string, j: number) => <Chip key={j} label={s} size="small" />)}
                         </Stack>
                         <Stack direction="row" spacing={1} mt={1}>
                           <Button component={Link} href={`/career-guidance/${c.slug}`} size="small" variant="outlined">Details</Button>
@@ -258,12 +258,12 @@ export default function CareerGuidance() {
                     </Card>
                   );
                 })}
+                <Stack direction="row" spacing={1} mt={2}>
+                  <Button onClick={()=> setCompare([])} disabled={!compare.length}>Clear</Button>
+                  <Button variant="contained" disabled={compare.length<2} onClick={()=> setDrawerOpen(false)}>Done</Button>
+                </Stack>
               </Box>
             )}
-            <Stack direction="row" spacing={1} mt={2}>
-              <Button onClick={()=> setCompare([])} disabled={!compare.length}>Clear</Button>
-              <Button variant="contained" disabled={compare.length<2} onClick={()=> setDrawerOpen(false)}>Done</Button>
-            </Stack>
           </Box>
         </Drawer>
       </Box>
