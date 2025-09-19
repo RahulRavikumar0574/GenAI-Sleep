@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Box, Alert } from '@mui/material';
 
-export default function LoginForm({ onAuth, isRegister = false }) {
+interface LoginFormProps {
+  onAuth: (data: unknown) => void;
+  isRegister?: boolean;
+}
+
+export default function LoginForm({ onAuth, isRegister = false }: LoginFormProps) {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -25,8 +30,8 @@ export default function LoginForm({ onAuth, isRegister = false }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || 'Error');
       onAuth(data);
-    } catch (err) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
