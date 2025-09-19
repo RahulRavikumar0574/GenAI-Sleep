@@ -236,7 +236,7 @@ export default function Dashboard() {
                         <Button key={c.slug} href={`/career-guidance/${c.slug}`} variant="text" sx={{ justifyContent: 'flex-start' }}>
                           {c.title}
                         </Button>
-                      ))
+                      ))}
                       {!recommendations.length && (
                         <Typography variant="body2" color="text.secondary">Add some skills and interests to see suggestions.</Typography>
                       )}
@@ -259,7 +259,7 @@ export default function Dashboard() {
                       <Stack direction="row" spacing={1} flexWrap="wrap">
                         {recommendations.flatMap((c) => (c.resources || [])).slice(0, 6).map((r, i: number) => (
                           <Button key={i} href={r.url} target="_blank" rel="noopener" variant="outlined" size="small">{r.title}</Button>
-                        ))
+                        ))}
                         {recommendations.length === 0 && (
                           <Typography variant="body2" color="text.secondary">No resources yet. Add interests to get tailored links.</Typography>
                         )}
