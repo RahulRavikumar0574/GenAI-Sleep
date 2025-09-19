@@ -46,7 +46,7 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
           <Divider sx={{ my: 2 }} />
           <Typography variant="h6" fontWeight={600} mb={1}>Key Stats</Typography>
           <Stack direction="row" spacing={2} mb={2}>
-            {stats.map((stat: any) => (
+            {stats.map((stat, idx) => (
               <Box key={stat.label} sx={{ textAlign: 'center' }}>
                 <Typography variant="h4" fontWeight={700}>{stat.value}</Typography>
                 <Typography variant="body2" color="text.secondary">{stat.label}</Typography>
@@ -57,7 +57,7 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
         <Box flex={1}>
           <Typography variant="h6" fontWeight={600} mb={1}>Related Careers</Typography>
           <Stack spacing={1}>
-            {related.map((rel: any) => (
+            {related.map((rel, idx) => (
               <Button key={rel.slug} href={`/career-guidance/${rel.slug}`} variant="outlined" startIcon={<Avatar src={rel.image} sx={{ width: 24, height: 24 }} />} sx={{ justifyContent: 'flex-start' }}>
                 {rel.title}
               </Button>
@@ -68,10 +68,10 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
       <Divider sx={{ my: 3 }} />
       <Typography variant="h5" fontWeight={600} mb={2}>A Day in the Life</Typography>
       <Timeline position="alternate">
-        {timeline.map((item: any, idx: number) => (
+        {timeline.map((item, idx: number) => (
           <TimelineItem key={idx}>
             <TimelineSeparator>
-              <TimelineDot color={item.color || 'primary'} />
+              <TimelineDot color={(item.color === 'primary' || item.color === 'secondary' || item.color === 'info' || item.color === 'success' || item.color === 'warning' || item.color === 'error' || item.color === 'inherit' || item.color === 'grey') ? item.color : 'primary'} />
               {idx < timeline.length - 1 && <TimelineConnector />}
             </TimelineSeparator>
             <TimelineContent>
@@ -84,7 +84,7 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
       <Divider sx={{ my: 3 }} />
       <Stack direction={{ xs: 'column', md: 'row' }} spacing={4}>
         <Box flex={1}>
-          <Typography variant="h6" fontWeight={600} mb={1}>Do's</Typography>
+          <Typography variant="h6" fontWeight={600} mb={1}>Do&apos;s</Typography>
           <ul>
             {dos.map((d: string, i: number) => (
               <li key={i}><Typography>{d}</Typography></li>
@@ -92,7 +92,7 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
           </ul>
         </Box>
         <Box flex={1}>
-          <Typography variant="h6" fontWeight={600} mb={1}>Don'ts</Typography>
+          <Typography variant="h6" fontWeight={600} mb={1}>Don&apos;ts</Typography>
           <ul>
             {donts.map((d: string, i: number) => (
               <li key={i}><Typography>{d}</Typography></li>
