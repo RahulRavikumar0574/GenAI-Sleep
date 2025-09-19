@@ -1,0 +1,41 @@
+# Node / Next.js
+node_modules/
+.next/
+out/
+.vercel/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# Env files
+.env
+.env.*
+*.env
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Build artifacts
+build/
+dist/
+coverage/
+
+# Monorepo specifics
+backend/node_modules/
+backend/dist/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Misc
+*.local
+.eslintcache
+.next-standalone/
