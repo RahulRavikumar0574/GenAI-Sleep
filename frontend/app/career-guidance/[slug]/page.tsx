@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { CAREER_PATHS } from '../careersData';
 import { notFound } from 'next/navigation';
-import { Box, Typography, Stack, Chip, Divider, Avatar, Button } from '@mui/material';
+import { Box, Typography, Stack, Divider, Avatar, Button } from '@mui/material';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/lab';
 import Image from 'next/image';
 import * as React from 'react';
@@ -11,7 +11,7 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
   const router = useRouter();
   // Unwrap params using React.use()
   const { slug } = React.use(params);
-  const career = CAREER_PATHS.find((c: any) => c.slug === slug);
+  const career = CAREER_PATHS.find((c) => c.slug === slug);
   if (!career) return notFound();
 
   // Use available fields and provide fallback/mock data for missing ones
@@ -20,15 +20,9 @@ export default function CareerDetailPage({ params }: { params: Promise<{ slug: s
     { label: 'Job Growth', value: '7%' },
     { label: 'Work/Life', value: 'Balanced' },
   ];
-  const timeline = career.timeline || [
-    { time: '8:00 AM', activity: 'Arrive at office/court', color: 'primary' },
-    { time: '10:00 AM', activity: 'Client meetings & case prep', color: 'secondary' },
-    { time: '1:00 PM', activity: 'Court hearings or research', color: 'info' },
-    { time: '4:00 PM', activity: 'Drafting documents', color: 'success' },
-    { time: '6:00 PM', activity: 'Wrap up & review', color: 'warning' },
-  ];
-  const dos = career.dos || [];
-  const donts = career.donts || [];
+  const timeline = (career.timeline ?? []) as { time: string; activity: string; color: string }[];
+  const dos = career.dos || ['Be curious', 'Ask questions'];
+  const donts = career.donts || ["Don't be afraid to fail"];
   // Related careers mock
   const related = [
     { slug: 'judge', title: 'Judge', image: '/images/judge.jpg' },

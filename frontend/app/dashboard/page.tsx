@@ -4,14 +4,10 @@ import { Box, Typography, Button, Card, CardContent, Avatar, TextField, Chip, St
 import SchoolIcon from '@mui/icons-material/School';
 import Donut from '../../components/charts/Donut';
 import Gauge from '../../components/charts/Gauge';
-import Radar, { RadarDatum } from '../../components/charts/Radar';
-import MiniLine from '../../components/charts/MiniLine';
-import { useTheme } from '@mui/material/styles';
 
 // Minimal career data imports for recommendations
 import { CAREER_PATHS } from '../career-guidance/careersData';
 
-// Types
 type StudentProfile = {
   name: string;
   age?: number | '';
@@ -41,7 +37,6 @@ const ALL_INTERESTS = [
 ];
 
 export default function Dashboard() {
-  const theme = useTheme();
   const [user, setUser] = useState<unknown>(null);
   const [profile, setProfile] = useState<StudentProfile>(DEFAULT_PROFILE);
   const [newSkill, setNewSkill] = useState('');
@@ -81,21 +76,6 @@ export default function Dashboard() {
   }, [recommendations, profile.skills]);
 
   // Radar data: use top recommended career's top 5 required skills
-  const radarData: RadarDatum[] = useMemo(() => {
-    const top = recommendations[0];
-    const required: string[] = (top?.requiredSkills || []).slice(0, 5);
-    if (!required.length) {
-      return [
-        { label: 'Item 1', value: 60 },
-        { label: 'Item 2', value: 40 },
-        { label: 'Item 3', value: 70 },
-        { label: 'Item 4', value: 30 },
-        { label: 'Item 5', value: 50 },
-      ];
-    }
-    const have = profile.skills.map(s => s.toLowerCase());
-    return required.map((s) => ({ label: s, value: have.includes(s.toLowerCase()) ? 90 : 30 }));
-  }, [recommendations, profile.skills]);
 
   const addChip = (type: 'skills' | 'interests', value: string) => {
     const v = value.trim();
@@ -256,7 +236,7 @@ export default function Dashboard() {
                         <Button key={c.slug} href={`/career-guidance/${c.slug}`} variant="text" sx={{ justifyContent: 'flex-start' }}>
                           {c.title}
                         </Button>
-                      ))} // c is inferred from recommendations
+                      ))
                       {!recommendations.length && (
                         <Typography variant="body2" color="text.secondary">Add some skills and interests to see suggestions.</Typography>
                       )}
@@ -279,7 +259,7 @@ export default function Dashboard() {
                       <Stack direction="row" spacing={1} flexWrap="wrap">
                         {recommendations.flatMap((c) => (c.resources || [])).slice(0, 6).map((r, i: number) => (
                           <Button key={i} href={r.url} target="_blank" rel="noopener" variant="outlined" size="small">{r.title}</Button>
-                        ))} // r is inferred from resources
+                        ))
                         {recommendations.length === 0 && (
                           <Typography variant="body2" color="text.secondary">No resources yet. Add interests to get tailored links.</Typography>
                         )}
