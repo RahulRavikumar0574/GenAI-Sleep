@@ -21,8 +21,6 @@ export default function Gauge({ size = 240, value, trackColor = '#e2e8f0', barCo
   const angle = startAngle + (endAngle - startAngle) * (clamp(value) / 100);
 
   const polar = (ang: number) => ({ x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang) });
-  const start = polar(startAngle);
-  const end = polar(endAngle);
 
   const needle = polar(angle);
 

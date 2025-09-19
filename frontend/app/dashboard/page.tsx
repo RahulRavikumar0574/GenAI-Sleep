@@ -42,7 +42,7 @@ const ALL_INTERESTS = [
 
 export default function Dashboard() {
   const theme = useTheme();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<unknown>(null);
   const [profile, setProfile] = useState<StudentProfile>(DEFAULT_PROFILE);
   const [newSkill, setNewSkill] = useState('');
   const [newInterest, setNewInterest] = useState('');
@@ -100,12 +100,12 @@ export default function Dashboard() {
   const addChip = (type: 'skills' | 'interests', value: string) => {
     const v = value.trim();
     if (!v) return;
-    setProfile((p) => ({ ...p, [type]: Array.from(new Set([...(p as any)[type], v])) }));
+    setProfile((p: StudentProfile) => ({ ...p, [type]: Array.from(new Set([...(p[type] as string[]), v])) }));
     if (type === 'skills') setNewSkill(''); else setNewInterest('');
   };
 
   const removeChip = (type: 'skills' | 'interests', value: string) => {
-    setProfile((p) => ({ ...p, [type]: (p as any)[type].filter((x: string) => x !== value) }));
+    setProfile((p: StudentProfile) => ({ ...p, [type]: (p[type] as string[]).filter((x: string) => x !== value) }));
   };
 
   return (
@@ -120,7 +120,12 @@ export default function Dashboard() {
                 </Avatar>
                 <Box>
                   <Typography variant="h4" fontWeight={700} color="#1e293b">
-                    Starting Hub{user && user.username ? `, ${user.username}` : ''}
+                    {(() => {
+                      if (user && typeof user === 'object' && user !== null && 'username' in user && typeof (user as { username?: unknown }).username === 'string') {
+                        return `Starting Hub, ${(user as { username: string }).username}`;
+                      }
+                      return 'Starting Hub';
+                    })()}
                   </Typography>
                   <Typography variant="subtitle1" color="#64748b">
                     Tell us about yourself and explore tailored career paths
@@ -247,11 +252,11 @@ export default function Dashboard() {
                   <CardContent>
                     <Typography variant="subtitle1" fontWeight={700}>Suggested Careers</Typography>
                     <Stack spacing={1} mt={1}>
-                      {recommendations.map((c: any) => (
+                      {recommendations.map((c) => (
                         <Button key={c.slug} href={`/career-guidance/${c.slug}`} variant="text" sx={{ justifyContent: 'flex-start' }}>
                           {c.title}
                         </Button>
-                      ))}
+                      ))} // c is inferred from recommendations
                       {!recommendations.length && (
                         <Typography variant="body2" color="text.secondary">Add some skills and interests to see suggestions.</Typography>
                       )}
@@ -272,9 +277,9 @@ export default function Dashboard() {
                       <Typography variant="subtitle1" fontWeight={700}>Learning Modules / Resources</Typography>
                       <Typography variant="body2" color="text.secondary" mb={1}>Links to free resources based on your interests</Typography>
                       <Stack direction="row" spacing={1} flexWrap="wrap">
-                        {recommendations.flatMap((c: any) => (c.resources || [])).slice(0, 6).map((r: any, i: number) => (
+                        {recommendations.flatMap((c) => (c.resources || [])).slice(0, 6).map((r, i: number) => (
                           <Button key={i} href={r.url} target="_blank" rel="noopener" variant="outlined" size="small">{r.title}</Button>
-                        ))}
+                        ))} // r is inferred from resources
                         {recommendations.length === 0 && (
                           <Typography variant="body2" color="text.secondary">No resources yet. Add interests to get tailored links.</Typography>
                         )}
