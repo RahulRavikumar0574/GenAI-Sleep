@@ -7,11 +7,16 @@ export default function LoginPage() {
   const router = useRouter();
   const [success, setSuccess] = useState(false);
 
-  const handleAuth = (data: any) => {
-    if (data.token) {
-      localStorage.setItem('token', data.token);
-      if (data.user) {
-        localStorage.setItem('user', JSON.stringify(data.user));
+  const handleAuth = (data: unknown) => {
+    if (
+      typeof data === 'object' &&
+      data !== null &&
+      'token' in data &&
+      typeof (data as any).token === 'string'
+    ) {
+      localStorage.setItem('token', (data as any).token);
+      if ('user' in data) {
+        localStorage.setItem('user', JSON.stringify((data as any).user));
       }
       setSuccess(true);
       router.push('/dashboard');

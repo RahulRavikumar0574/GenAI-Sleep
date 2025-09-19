@@ -7,7 +7,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [success, setSuccess] = useState(false);
 
-  const handleAuth = (data: any) => {
+  const handleAuth = (data: unknown) => {
     setSuccess(true);
     router.push('/login');
   };
